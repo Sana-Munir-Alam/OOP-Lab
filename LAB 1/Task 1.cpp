@@ -2,22 +2,28 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
-	float Array[argc - 1];
-	//Copying from one array to other
-	for (int i = 0; i < argc-1; i++){
-		Array[i] = stof(argv[i+1]);
-	}
-	
-	float Max = 0;
-	float Max2 = 0;
-	for (int i = 0; i < argc-1 ; i++){
-		if (Array[i] > Max){
-			Max2 = Max;
-			Max = Array[i];
-		}else if ((Array[i] != Max) && (Max2 < Array[i])){
-			Max2 = Array[i];
-		}
-	}
-	cout <<"The Second Highest Number is: "<< Max2;
-	return 0;
+    if (argc != 21){
+        cout <<"Enter Exactly 20 Float Numbers!!";
+        return 1;
+    }
+    float Array[20];
+    //Copying array that is taken from Powershell into a new array
+    for (int i = 1; i < argc; i++){
+        Array[i-1] = stof(argv[i]);
+    }
+    float *FirstMax = nullptr;
+    float *SecondMax = nullptr;
+
+    for (float *ptr = Array; ptr < (Array + 20); ptr++){
+        if (FirstMax == nullptr || *ptr > *FirstMax){
+            SecondMax = FirstMax;
+            FirstMax = ptr;
+        }else if (SecondMax == nullptr || (*ptr > *SecondMax && *ptr != *FirstMax)) {
+            SecondMax = ptr;
+        }
+    }
+    if (SecondMax != nullptr) {
+        cout << "The second highest number is: " << *SecondMax << endl;
+    } 
+    return 0;
 }
