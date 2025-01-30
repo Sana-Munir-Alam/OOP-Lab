@@ -21,10 +21,10 @@ int main(int argc, char *argv[]){
     }
 
     int ValueToAdd = stoi(argv[1]);
-    int Size = argc - 2;
+    int Size = argc - 1;
     int* Array = new int[Size];
     for (int i = 0; i < Size; i++){
-        Array[i] = stoi(argv[i+2]);
+        Array[i] = stoi(argv[i+1]);
     }
     void* ReturnedArray = Add(static_cast<void*>(Array), static_cast<void*>(&Size), static_cast<void*>(&ValueToAdd)); 
 
