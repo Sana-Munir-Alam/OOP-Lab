@@ -84,3 +84,38 @@ int main(int argc, char* argv[]){
 	delete[] Array;
 	return 0;
 }
+////////////////
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main(int argc, char* argv[]){
+	if (argc < 2){
+		cout << "Insufficent Data Entered!!";
+	}
+	int InitialSize = 5;
+	int CurrentSize = InitialSize;
+	int *Array = new int [CurrentSize];
+	
+	if (argc < 7){
+		for (int i = 0; i < InitialSize; i++){
+			Array[i] = stoi(argv[i+1]);
+		}
+		
+		cout << "Original Size Array: " << endl;
+		for (int i = 0; i < InitialSize; i++){
+			cout << Array[i] << " ";
+		}
+	}else{
+		CurrentSize = InitialSize * 2;
+		int *NewArray = new int[CurrentSize];
+		memcpy(NewArray, Array, 5 * sizeof(int));
+		for (int i = 0; i < InitialSize; i++){
+			NewArray[i] = stoi(argv[i+1]);
+		}
+		
+	}
+	
+	delete[] Array;
+	return 0;
+}
