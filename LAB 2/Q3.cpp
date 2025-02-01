@@ -2,120 +2,51 @@
 #include <cstring>
 using namespace std;
 
-int main(int argc, char* argv[]){
-    
-	int* Array = new int[5];
-    if (argc < 6){
-    	int Size = argc - 1;
-    	cout << "Without Resizing Array: " << endl;
-    	for (int i= 0; i < Size; i++){
-    		Array[i] = stoi(argv[i+1]);
-		}
-		for (int i= 0; i < Size; i++){
-    		cout << Array[i] << " ";
-		}
-		cout << endl;
-	
-	}else{
-		int Size = argc - 1;
-		int* NewArray = new int[10];
-		memcpy(NewArray, Array, 5 * sizeof(int));
-		delete[] Array; //Free Old Memory
-		Array = NewArray;
-		
-		for (int i = 5; i < Size; i++){
-    		NewArray[i] = stoi(argv[i+1]);
-		}
-		
-		//Final resize to the max capacity of Elements
-		int* FinalNew = new int[Size];
-		memcpy(FinalNew, NewArray, (Size) * sizeof(int));
-		delete[] Array;
-		Array = FinalNew;
-		cout << "Resized array: " << endl;
-		for (int i = 0; i < Size; i++){
-    		cout << Array[i] << " ";
-		}
-		cout << "\n";
-	}
-	
-	delete[] Array;
-	return 0;
+void ResizeArray(int*& Arr, int& Capacity, int NewCapacity) {
+    int* NewArr = new int[NewCapacity];
+    memcpy(NewArr, Arr, Capacity * sizeof(int)); // Copy existing elements
+    delete[] Arr; // Free old memory
+    Arr = NewArr;
+    Capacity = NewCapacity;
 }
-
-///////////////////////////////////////
-#include <iostream>
-#include <cstring>
-using namespace std;
-
-int main(int argc, char* argv[]){
-    
-	int* Array = new int[5];
-    if (argc < 6){
-    	cout << "Without Resizing Array: " << endl;
-    	for (int i= 0; i < argc - 1; i++){
-    		Array[i] = stoi(argv[i+1]);
-		}
-		for (int i= 0; i < argc - 1; i++){
-    		cout << Array[i] << " ";
-		}
-		cout << endl;
-	}else{
-		int* NewArray = new int[10];
-		memcpy(NewArray, Array, 5 * sizeof(int));
-		delete[] Array; //Old Array Deleted
-		Array = NewArray;
-		for (int i= 5; i < argc - 1; i++){
-    		Array[i] = stoi(argv[i+1]);
-		}
-		
-		//Final resize to the max capacity of Elements
-		int* FinalNew = new int[argc - 1];
-		memcpy(NewArray, Array, (argc - 1) * sizeof(int));
-		delete[] Array;
-		Array = FinalNew;
-		cout << "Resized array: " << endl;
-		for (int i = 0; i < argc - 1; i++){
-    		cout << Array[i] << " ";
-		}
-		cout << "\n";
-	}
-	
-	delete[] Array;
-	return 0;
-}
-////////////////
-#include <iostream>
-#include <cstring>
-using namespace std;
 
 int main(int argc, char* argv[]){
 	if (argc < 2){
 		cout << "Insufficent Data Entered!!";
 	}
+
 	int InitialSize = 5;
 	int CurrentSize = InitialSize;
 	int *Array = new int [CurrentSize];
 	
-	if (argc < 7){
-		for (int i = 0; i < InitialSize; i++){
-			Array[i] = stoi(argv[i+1]);
-		}
+	// Double Resize
+	if (argc - 1 > InitialSize) {
+        CurrentSize = InitialSize * 2;
+        ResizeArray(Array, CurrentSize, CurrentSize);
+        cout << "Array Resized To " << CurrentSize << " Elements." << endl;
+    }
+
+	for (int i = 0; i < argc - 1; i++) {
+        Array[i] = stoi(argv[i+1]);
+    }
+
+	// Final Resize of The Array
+	if (argc - 1 < CurrentSize) {
+        ResizeArray(Array, CurrentSize, argc - 1);
+        cout << "Array resized to " << argc - 1 << " elements." << endl;
+    }
 		
-		cout << "Original Size Array: " << endl;
-		for (int i = 0; i < InitialSize; i++){
-			cout << Array[i] << " ";
+	// Final Output
+	cout << "Displaying Resized Array: " << endl;
+	cout << "Array: [";
+	for (int i = 0; i < argc - 1; i++) {
+		cout << Array[i];
+		if (i < argc - 2) {
+			cout << ", ";
 		}
-	}else{
-		CurrentSize = InitialSize * 2;
-		int *NewArray = new int[CurrentSize];
-		memcpy(NewArray, Array, 5 * sizeof(int));
-		for (int i = 0; i < InitialSize; i++){
-			NewArray[i] = stoi(argv[i+1]);
-		}
-		
 	}
-	
+	cout << "]" << endl;
 	delete[] Array;
-	return 0;
+		
+	return 0;	
 }
