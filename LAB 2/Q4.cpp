@@ -15,10 +15,17 @@ struct Organization{
 };
 
 int main(int argc, char* argv[]){
-	if (argc < 2){
-		cout << "Insufficent Data Enters!!. Pls enter Organization Name/Number/ Employee ID/Name/Salary.";
-		return 1;
-	}
+	if (argc < 7) {
+        cout << "Insufficient Data Entered!!" << endl;
+        cout << "Please provide the following arguments:" << endl;
+        cout << "1. Organization Name" << endl;
+        cout << "2. Organization Number" << endl;
+        cout << "3. Employee ID" << endl;
+        cout << "4. Employee First Name" << endl;
+        cout << "5. Employee Last Name" << endl;
+        cout << "6. Employee Salary" << endl;
+        return 1;
+    }
 	Organization Org;
 	Org.OrganizationName = argv[1];
 	Org.OrganizationNumber = argv[2];
