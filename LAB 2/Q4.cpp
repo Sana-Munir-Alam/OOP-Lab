@@ -37,10 +37,10 @@ int main(int argc, char* argv[]){
 	
 	cout << "The size of Outer Structure [Organization] is: " << sizeof(Organization) << endl;
  	cout << "Organisation Name: " << Org.OrganizationName << endl;
-    cout << "Organisation Number: " << Org.OrganizationNumber << endl;
-
-    cout << "Employee id: " << Org.Emp.EmployeeID << endl;
-    cout << "Employee name: " << Org.Emp.EmployeeName << endl;
-    cout << "Employee Salary: " << Org.Emp.Salary << endl;
+	cout << "Organisation Number: " << Org.OrganizationNumber << endl;
+	
+	cout << "Employee id: " << Org.Emp.EmployeeID << endl;
+	cout << "Employee name: " << Org.Emp.EmployeeName << endl;
+	cout << "Employee Salary: " << Org.Emp.Salary << endl;
 	return 0;	
 }
