@@ -2,9 +2,10 @@
 using namespace std;
 
 class Date{
-	int Month;
-	int Day;
-	int Year;
+    private:
+        int Month;
+        int Day;
+        int Year;
 	public:
 		void setDay(int day){
 			Day = day;
