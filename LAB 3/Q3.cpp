@@ -5,20 +5,25 @@ class Glass{
 	public:
 		int LiquidLevel;
 		
-		void SetLiquid(int Liquid){
-			LiquidLevel = Liquid;
-		}
+		Glass (){
+            LiquidLevel = 200;
+        }
 		void RefillDrink(){
 			LiquidLevel = 200;
 			cout << "Your Glass Has been Refilled to 200ml...Enjoy!" << endl;
 		}
 		
 		void DrinkLevel(int millilitres){
-			if ((LiquidLevel - millilitres) < 100){
+            if (LiquidLevel < 0){
+                cout << "Invalid Input! Please Enter A Positive Value!!" << endl;
+                return;
+            }
+            LiquidLevel = LiquidLevel - millilitres;
+			if ((LiquidLevel) < 100){
 				cout << "Your Glass level has dropped below 100ml. Allow me to Refill!" <<endl;
 				RefillDrink();
 			}else{
-				cout << "No need to refill, you still have " << LiquidLevel - millilitres << "ml left...Enjoy!"<< endl;
+				cout << "No need to refill, you still have " << LiquidLevel << "ml left...Enjoy!"<< endl;
 			}
 		}
 };
@@ -29,7 +34,6 @@ int main(int argc, char* argv[]){
 		return 1;
 	}
 	Glass Info;
-	Info.SetLiquid(200);
 	Info.DrinkLevel(stoi(argv[1]));
 	return 0;
 }
