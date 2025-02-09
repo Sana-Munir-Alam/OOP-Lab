@@ -1,21 +1,44 @@
 #include <iostream>
+#include <string>
+#include <iomanip>
 using namespace std;
 
 class Employee{
 	private:
 		double Salary;
-	public:
 		string FirstName;
 		string LastName;
-		
-		double setSalary(double Income){
+	public:
+		void SetFirstName (string First){
+            FirstName = First;
+        }
+        void SetLastName (string Last){
+            LastName = Last;
+        }
+		void SetSalary(double Income){
 			if (Income < 0.0){
 				Salary = 0.0;
 			}else {
 				Salary = Income;
 			}
-			return Salary;
 		}
+
+        string GetFirstName(){
+            return FirstName;
+        }
+        string GetLastName(){
+            return LastName;
+        }
+        double GetSalary(){
+            return Salary;
+        }
+
+        double YearlySalary() {
+            return Salary * 12;
+        }
+        void SalaryRaise(){
+            Salary = Salary * 1.10;
+        }
 };
 
 int main(int argc, char* argv[]){
@@ -25,29 +48,29 @@ int main(int argc, char* argv[]){
 		return 1;
 	}
 	Employee EmployeeTest[2]; // Two objects
-	EmployeeTest[0].FirstName = argv[1];
-	EmployeeTest[0].LastName = argv[2];
-	EmployeeTest[0].setSalary(stod(argv[3]));
-	string FullName1 = EmployeeTest[0].FirstName + " " + EmployeeTest[0].LastName;
-	double Salary1 = 12 * (EmployeeTest[0].setSalary(stod(argv[3])));
+
+    for (int i = 0; i < 2; i++){
+        EmployeeTest[i].SetFirstName(argv[1 + 3 * i]); // This Picks First Name From argc Location 1 and 4
+        EmployeeTest[i].SetLastName(argv[2 + 3 * i]); // This Picks Last Name From argc Location 2 and 5
+        EmployeeTest[i].SetSalary(stod(argv[3 + 3 * i]));  // This Picks Salary From argc Location 3 and 6
+    }
+
+    cout << fixed << setprecision(2);
+	for (int i = 0; i < 2; i++){
+        cout << "Employee " << i + 1 << endl;
+        cout << "Name: " << EmployeeTest[i].GetFirstName() << " " << EmployeeTest[i].GetLastName() << endl;
+        cout << "Yearly Salary: $" << EmployeeTest[i].YearlySalary() << endl << endl;
+    }
 	
-	EmployeeTest[1].FirstName = argv[4];
-	EmployeeTest[1].LastName = argv[5];
-	EmployeeTest[1].setSalary(stod(argv[6]));
-	string FullName2 = EmployeeTest[1].FirstName + " " + EmployeeTest[1].LastName;
-	double Salary2 = 12 * (EmployeeTest[0].setSalary(stod(argv[6])));
-	
-	cout << "Employee 1" << endl;
-	cout << "Name: " << FullName1 << endl;
-	cout << "Yearly Salary: $" << Salary1 << endl << endl;
-	
-	cout << "Employee 2" << endl;
-	cout << "Name: " << FullName2 << endl;
-	cout << "Yearly Salary: $" << Salary2 << endl << endl;
-	
+    for (int i = 0; i < 2; i++){
+        EmployeeTest[i].SalaryRaise();
+    }
 	cout << "-----------------------------------"<<endl;
-	cout << "10% Bonus" << endl;
-	cout << "Employee 1 Bonus Yearly salary: $" << Salary1 + (Salary1 * 0.1) << endl;
-	cout << "Employee 2 Bonus Yearly salary: $" << Salary2 + (Salary2 * 0.1) << endl;
+	cout << "After 10% Raise: " << endl;
+	for (int i = 0; i < 2; i++){
+        cout << "Employee " << i + 1 << endl;
+        cout << "Name: " << EmployeeTest[i].GetFirstName() << " " << EmployeeTest[i].GetLastName() << endl;
+        cout << "Yearly Salary: $" << EmployeeTest[i].YearlySalary() << endl << endl;
+    }
 	return 0;
 }
