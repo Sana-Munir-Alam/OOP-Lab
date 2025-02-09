@@ -1,10 +1,7 @@
 /* Notes:
 When a problem is found, the throw keyword raises an exception, allowing us to build a custom error.
-
 An exception handler is used by a program to catch an exception. It's added to the area of a program where you'll be dealing with the issue. The catch keyword is used to accomplish this.
-
 The try block identifies the code block for which exceptions will be triggered; one or more catch blocks should be placed after it.
-
 cerr is used to display eros while cout is used for standard output.
 */
 
@@ -48,7 +45,7 @@ class Matrix{
 				throw invalid_argument("Matrix dimensions must be positive integers.");
 			}
 			
-			// Creating that 2D Array dynamically based upon Uswer Input
+			// Creating that 2D Array dynamically based upon User Input
 			MatrixArray = new int*[Rows];
 			for (int i = 0; i < Rows; i++){
 				MatrixArray[i] = new int[Coloumns];
@@ -150,7 +147,7 @@ int main(int argc, char* argv[]){
 		for (int i = 0; i < Rows2; i++){
 			for (int j = 0; j < Cols2; j++){
 				if(Position >= argc){
-					throw runtime_error("Insufficient Arguments for Matrix 1!!");
+					throw runtime_error("Insufficient Arguments for Matrix 2!!");
 				}
 				M2.SetElements(i,j,stoi(argv[Position++]));
 			}
