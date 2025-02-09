@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 using namespace std;
 
 class Glass{
@@ -14,7 +15,7 @@ class Glass{
 		}
 		
 		void DrinkLevel(int millilitres){
-            if (LiquidLevel < 0){
+            if (millilitres < 0){
                 cout << "Invalid Input! Please Enter A Positive Value!!" << endl;
                 return;
             }
@@ -29,11 +30,21 @@ class Glass{
 };
 
 int main(int argc, char* argv[]){
-	if (argc != 2){
-		cout << "Incorrect data Entered!!" << endl << "Kindly Enter the amount of Drink intake";
-		return 1;
-	}
+    string UserInput;
 	Glass Info;
-	Info.DrinkLevel(stoi(argv[1]));
-	return 0;
+	
+    cout << "Hola, Welcome to the Robotic Glass Refiller!" << endl;
+    cout << "Your Glass Initially Has 200ml of liquid...Enjoy!" << endl;
+    cout << "Enter the Amount of liquid you drank in ml OR type 'Exit' to Quit: " << endl;
+    
+    while (1){
+        cout << "> ";
+        cin >> UserInput;
+        if (UserInput == "Exit"){
+            cout << "Adios, Exiting Program..." << endl;
+            break;
+        }
+        Info.DrinkLevel(stoi(UserInput));
+    }
+    return 0;
 }
