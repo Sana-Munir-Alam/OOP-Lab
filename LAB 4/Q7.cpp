@@ -1,85 +1,105 @@
 #include <iostream>
-#include <stdexcept>
+#include <string>
 using namespace std;
 
-class Invoice {
+class Book {
 	private:
-		string PartNumber;
-		string PartDescription;
-		int Quantity;
-		double PerPrice;
+		string Author;
+		string Title;
+		string Publisher;
+		double Price;
+		int Stock;
+
 	public:
-		Invoice(){	// Default Destructor
-			PartNumber = "";
-			PartDescription = "";
-			Quantity = 0;
-			PerPrice = 0.0;
+		// Default Constructor
+		Book(){
+			Author = "";
+			Title = "";
+			Publisher = "";
+			Price = 0.0;
+			Stock = 0;
 		}
-		Invoice(string Number, string Description, int Qty, double Price){	// Paramatrized Constructor
-			PartNumber = Number;
-			PartDescription = Description;
-			SetQuantity(Qty);
-			SetPricePerItem(Price);
-		}
-
-		void SetPartNumber(string Number) {
-			PartNumber = Number;
-		}
-		string GetPartNumber() const {
-			return PartNumber;
-		}
-	
-		void SetPartDescription(string Description) {
-			PartDescription = Description;
-		}
-		string GetPartDescription() const {
-			return PartDescription;
-		}
-
-		void SetQuantity(int Qty) {
-			if (Qty > 0) {
-				Quantity = Qty;
-			} else {
-				Quantity = 0; 
+		// Paramatrized Constructor
+		Book(string Author, string Title, string Publisher, double Price, int Stock){
+				this->Author = Author;
+				this->Title = Title;
+				this->Publisher = Publisher;
+				this->Price = Price;
+				this->Stock = Stock;
 			}
+		string GetAuthor() const {
+			return Author;
 		}
-		int GetQuantity() const {
-			return Quantity;
+		string GetTitle() const {
+			return Title;
 		}
-	
-		void SetPricePerItem(double Price) {
-			if (Price > 0.0) {
-				PerPrice = Price;
-			} else {
-				PerPrice = 0.0;
-			}
+		string GetPublisher() const {
+			return Publisher;
 		}
-		double GetPricePerItem() const {
-			return PerPrice;
+		double GetPrice() const {
+			return Price;
+		}
+		int GetStock() const {
+			return Stock;
 		}
 
-		double GetInvoiceAmount() const {
-			return Quantity * PerPrice;
+		void CheckAvailability(int RequiredCopies) const {
+			if (Stock >= RequiredCopies) {
+				double TotalCost = Price * RequiredCopies;
+				cout << "Book is available!" << endl;
+				cout << "Total cost for " << RequiredCopies << " copies: $" << TotalCost << endl;
+			} else {
+				cout << "Required copies not in stock." << endl;
+			}
 		}
 };
 
 int main() {
-	Invoice invoice("SD-1234", "Screw Driver", 5, 13.99);
+    Book Inventory[] = {
+        Book("J.K. Rowling", "Harry Potter and the Sorcerer's Stone", "Bloomsbury", 15.99, 10),
+        Book("Charlotte Brontë", "Jane Eyre", "Smith, Elder & Co.", 12.50, 5),
+        Book("Jane Austen", "Sense and Sensibility", "Thomas Egerton, Military Library (Whitehall, London)", 10.99, 3),
+        Book("J.R.R. Tolkien", "The Hobbit", "Allen & Unwin", 14.95, 7)
+    };
 
-    // Displaying Valid Invoice Details
-    cout << "Part Number: " << invoice.GetPartNumber() << endl;
-    cout << "Part Description: " << invoice.GetPartDescription() << endl;
-    cout << "Quantity: " << invoice.GetQuantity() << endl;
-    cout << "Price Per Item: $" << invoice.GetPricePerItem() << endl;
-    cout << "Invoice Amount: $" << invoice.GetInvoiceAmount() << endl;
+    int NumBooks = sizeof(Inventory) / sizeof(Inventory[0]);
+	char Choice;
+	do {
+		string SearchTitle, SearchAuthor;
+		cout << "Enter The Title of The Book: ";
+		getline(cin, SearchTitle);
+		cout << "Enter The Author of The Book: ";
+		getline(cin, SearchAuthor);
 
-    // Testing Invalid Values
-    invoice.SetQuantity(-3); 
-    invoice.SetPricePerItem(-5.0); 
-    cout << "\nAfter Setting Invalid Values:" << endl;
-    cout << "Quantity: " << invoice.GetQuantity() << endl;
-    cout << "Price Per Item: $" << invoice.GetPricePerItem() << endl;
-    cout << "Invoice Amount: $" << invoice.GetInvoiceAmount() << endl;
+		bool found = false;
+		for (int i = 0; i < NumBooks; ++i) {
+			if (Inventory[i].GetTitle() == SearchTitle && Inventory[i].GetAuthor() == SearchAuthor) {
+				found = true;
+				cout << "\nBook found!" << endl;
+				cout << "Title: " << Inventory[i].GetTitle() << endl;
+				cout << "Author: " << Inventory[i].GetAuthor() << endl;
+				cout << "Publisher: " << Inventory[i].GetPublisher() << endl;
+				cout << "Price: $" << Inventory[i].GetPrice() << endl;
+				cout << "Stock: " << Inventory[i].GetStock() << endl;
 
+				int RequiredCopies;
+				cout << "\nEnter The Number of Copies Required: ";
+				cin >> RequiredCopies;
+
+				Inventory[i].CheckAvailability(RequiredCopies);
+				break;
+			}
+		}
+		if (!found) {
+			cout << "Book not found in the inventory." << endl;
+		}
+		cin.ignore();
+
+        cout << "\nDo you want to search for another book? (y/n): ";
+        cin >> Choice;
+        cin.ignore();
+    } while (Choice == 'y' || Choice == 'Y');
+
+    cout << "Thank You For Using The Bookshop System." << endl;
     return 0;
 }
