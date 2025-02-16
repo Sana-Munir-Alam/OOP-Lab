@@ -56,7 +56,7 @@ class Book {
 
 int main() {
     Book Inventory[] = {
-        Book("J.K. Rowling", "Harry Potter and the Sorcerer's Stone", "Bloomsbury", 15.99, 10),
+        Book("J.K. Rowling", "Harry Potter and the Half Blood Prince", "Bloomsbury", 15.99, 10),
         Book("Charlotte Brontë", "Jane Eyre", "Smith, Elder & Co.", 12.50, 5),
         Book("Jane Austen", "Sense and Sensibility", "Thomas Egerton, Military Library (Whitehall, London)", 10.99, 3),
         Book("J.R.R. Tolkien", "The Hobbit", "Allen & Unwin", 14.95, 7)
