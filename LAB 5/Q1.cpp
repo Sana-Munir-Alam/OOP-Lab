@@ -6,8 +6,11 @@ class Engine{	// Component Class
 		bool IsRunning;
 	public:
 		Engine(): IsRunning(false){
-			// Default COnstructor
+			cout << "Engine Constructor Called!" << endl;
 		}
+		~Engine() {
+	        cout << "Engine destructed!" << endl;
+	    }
 		void Start(){
 			if (IsRunning == false){
 				IsRunning = true;
@@ -30,6 +33,12 @@ class Car{	// Owner CLass
 	private:
 		Engine Info;	// Composition Member
 	public:
+		Car(){
+			cout << "Car Constructor Called!" << endl;
+		}
+		~Car() {
+	        cout << "Car destructed!" << endl;
+	    }
 		void StartCar(){
 			Info.Start();
 		}
