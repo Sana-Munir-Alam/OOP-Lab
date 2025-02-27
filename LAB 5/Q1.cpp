@@ -46,10 +46,18 @@ class Car{	// Owner CLass
 			Info.Stop();
 		}
 };
-
-int main(){
-	Car Toyota;
-	Toyota.StartCar();
-	Toyota.StopCar();
-	return 0;
+int main() {
+    cout << "===== Car Engine Demonstration =====" << endl;
+    {
+        cout << endl << "Creating car object..." << endl;
+        Car Toyota;
+        
+        cout << "\nOperating car:" << endl;
+        Toyota.StartCar();
+        Toyota.StopCar();
+        
+        cout << endl << "Car going out of scope..." << endl;
+    }
+    cout << endl << "Program ending..." << endl;
+    return 0;
 }
