@@ -10,13 +10,13 @@ struct MenuItem {
 
 class CoffeeShop {
 private:
-    string Name;
-    MenuItem* Menu;
     int MenuSize;
     string* Orders;
     int OrdersSize;
 
 public:
+    const string Name;
+    MenuItem* Menu;
     // Parmatrized Constructor
     CoffeeShop(const string& ShopName, const MenuItem* menuItems, int menuSize) 
         : Name(ShopName), MenuSize(menuSize), Orders(nullptr), OrdersSize(0) {
@@ -42,7 +42,7 @@ public:
             }
         }
         if (!exists) {
-            return "This item '" + ItemName + "' is currently unavailable";
+            return "This item '" + ItemName + "' is currently unavailable!";
         }
         // Resize Orders array
         string* NewOrders = new string[OrdersSize + 1];
@@ -207,7 +207,7 @@ int main() {
 	cout << "-------------------------" <<endl;
 	cout << "Presenting You the Cheapest Item In Our Menu!" << endl;
     cout << "Cheapest Item: " << Shop.CheapestItem() << endl;
-	cout << "-------------------------" <<endl;
+
     
 	// Testing AddOrder to the Order List Based On Current Menu
 	cout << "-------------------------" <<endl;
