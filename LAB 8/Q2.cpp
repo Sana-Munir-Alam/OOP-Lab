@@ -14,9 +14,9 @@ class PolynomialUtils {
 
 class Polynomial {
     private:
-        vector<int> Coefficients;
+        vector<int> Coefficients;   //The index of each element represents the exponent of x
 
-        void trim() {
+        void trim() {   // If coefficients = {3, 2, 0, 0}, after calling trim(), it becomes {3, 2}
             while (!Coefficients.empty() && Coefficients.back() == 0) {
                 Coefficients.pop_back();
             }
@@ -56,7 +56,7 @@ class Polynomial {
         // Overloaded multiplication
         Polynomial operator*(const Polynomial& other) const {
             vector<int> result(Coefficients.size() + other.Coefficients.size() - 1, 0);
-            for (size_t i = 0; i < Coefficients.size(); ++i) {
+            for (size_t i = 0; i < Coefficients.size(); ++i) {  //Uses nested loops to multiply every term in the first polynomial with every term in the second.
                 for (size_t j = 0; j < other.Coefficients.size(); ++j) {
                     result[i + j] += Coefficients[i] * other.Coefficients[j];
                 }
