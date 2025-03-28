@@ -61,7 +61,7 @@ class Rupee : public Currency {
         Rupee(double amount) : Currency(amount, "INR", "₹", 0.012) {} // Example: 1 INR = 0.012 USD
 
         void displayCurrency() const override {
-            cout << "Indian Rupee: " << CurrencySymbol << fixed << setprecision(2) << Amount << endl;
+            cout << "Pakistani Rupee: " << CurrencySymbol << fixed << setprecision(2) << Amount << endl;
         }
 };
 
@@ -82,7 +82,7 @@ int main() {
     cout << endl << "Conversions:" << endl;
     cout << "100 USD to EUR: " << usd.convertTo(eur) << " EUR" << endl;
     cout << "50 EUR to USD: " << eur.convertTo(usd) << " USD" << endl;
-    cout << "5000 INR to USD: " << inr.convertTo(usd) << " USD" << endl;
+    cout << "5000 PKR to USD: " << inr.convertTo(usd) << " USD" << endl;
 
     return 0;
 }
