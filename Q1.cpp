@@ -52,6 +52,20 @@ class CreditCard{
             cout << "Deep Copy Constructor Called" << endl;
 
         }
+        void setTransaction(int index, const string& data) {
+            if (index >= 0 && index < size){
+                TransactionHistory[index] = data;
+            }
+        }
+        void printTransactions() const {
+            cout << "Transactions for card [" << CardNumber << "]: ";
+            for (int i = 0; i < size; ++i) {
+                cout << TransactionHistory[i] << " ";
+            }
+            cout << endl;
+        }
+        
+        
 };
 
 /*
@@ -63,15 +77,27 @@ Paramatrized COnstructor will be used whe we already have all the data up front.
 
 */
 
-int main() {{
-        cout << "Creating card1 (default constructor)" << endl;
-        CreditCard card1;
+int main() {
+    {
+        CreditCard card1(43458587, 1200.0f, 5000.0f, 3);
+        card1.setTransaction(0, "Amazon");
+        card1.setTransaction(1, "Netflix");
+        card1.setTransaction(2, "Spotify");
 
-        cout << "Creating card2 (parameterized constructor)" << endl;
-        CreditCard card2(43543435, 1200.0f, 5000.0f, 3);
+        cout << "Original card transactions:" << endl;
+        card1.printTransactions();
 
-        cout << "Creating card3 (copy constructor)" << endl;
-        CreditCard card3 = card2;
-    } // Scope ends here — all destructors will be called in reverse order
+        CreditCard card2 = card1;  // Deep copy here
+
+        // Modify the original
+        card1.setTransaction(1, "Apple");
+
+        cout << "\nAfter modifying original card's second transaction:" << endl;
+        cout << "Original card:" << endl;
+        card1.printTransactions();
+
+        cout << "Copied card (should be unchanged):" << endl;
+        card2.printTransactions();
+    }
     return 0;
 }
