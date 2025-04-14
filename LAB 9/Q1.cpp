@@ -3,120 +3,115 @@
 
 using namespace std;
 
-// Wallet class: fully encapsulated
+// Wallet class
 class Wallet {
-private:
-    double balance;
-    double dailyDepositTotal;
-    double dailyWithdrawTotal;
-    static const double MAX_DAILY_DEPOSIT;
-    static const double MAX_DAILY_WITHDRAW;
-
-public:
-    Wallet() {
-        balance = 0.0;
-        dailyDepositTotal = 0.0;
-        dailyWithdrawTotal = 0.0;
-    }
-
-    bool deposit(double amount) {
-        if (amount <= 0) {
-            cout << "Deposit amount must be positive." << endl;
-            return false;
+    private:
+        double Balance;
+        double DailyDepositTotal;
+        double DailyWithdrawTotal;
+        static const double MAX_DAILY_Deposit;
+        static const double MAX_DAILY_Withdraw;
+    public:
+        Wallet() {
+            Balance = 0.0;
+            DailyDepositTotal = 0.0;
+            DailyWithdrawTotal = 0.0;
         }
-        if (dailyDepositTotal + amount > MAX_DAILY_DEPOSIT) {
-            cout << "Deposit failed: exceeds daily deposit limit." << endl;
-            return false;
+        bool Deposit(double amount) {
+            if (amount <= 0) {
+                cout << "Deposit amount must be positive." << endl;
+                return false;
+            }
+            if (DailyDepositTotal + amount > MAX_DAILY_Deposit) {
+                cout << "Deposit failed: exceeds daily Deposit limit." << endl;
+                return false;
+            }
+            Balance += amount;
+            DailyDepositTotal += amount;
+            cout << "Deposited: $" << amount << " | New Balance: $" << Balance << endl;
+            return true;
         }
-        balance += amount;
-        dailyDepositTotal += amount;
-        cout << "Deposited: $" << amount << " | New Balance: $" << balance << endl;
-        return true;
-    }
+        bool Withdraw(double amount) {
+            if (amount <= 0) {
+                cout << "Withdrawal amount must be positive." << endl;
+                return false;
+            }
+            if (amount > Balance) {
+                cout << "Withdrawal failed: insufficient Balance." << endl;
+                return false;
+            }
+            if (DailyWithdrawTotal + amount > MAX_DAILY_Withdraw) {
+                cout << "Withdrawal failed: exceeds daily Withdrawal limit." << endl;
+                return false;
+            }
+            Balance -= amount;
+            DailyWithdrawTotal += amount;
+            cout << "Withdrawn: $" << amount << " | Remaining Balance: $" << Balance << endl;
+            return true;
+        }
 
-    bool withdraw(double amount) {
-        if (amount <= 0) {
-            cout << "Withdrawal amount must be positive." << endl;
-            return false;
+        double getBalance() const {
+            return Balance;
         }
-        if (amount > balance) {
-            cout << "Withdrawal failed: insufficient balance." << endl;
-            return false;
-        }
-        if (dailyWithdrawTotal + amount > MAX_DAILY_WITHDRAW) {
-            cout << "Withdrawal failed: exceeds daily withdrawal limit." << endl;
-            return false;
-        }
-        balance -= amount;
-        dailyWithdrawTotal += amount;
-        cout << "Withdrawn: $" << amount << " | Remaining Balance: $" << balance << endl;
-        return true;
-    }
 
-    double getBalance() const {
-        return balance;
-    }
-
-    void resetDailyLimits() {
-        dailyDepositTotal = 0.0;
-        dailyWithdrawTotal = 0.0;
-    }
+        void ResetDailyLimits() {
+            DailyDepositTotal = 0.0;
+            DailyWithdrawTotal = 0.0;
+        }
 };
 
-// Define static constants
-const double Wallet::MAX_DAILY_DEPOSIT = 1000.0;
-const double Wallet::MAX_DAILY_WITHDRAW = 500.0;
+// Defining static constants
+const double Wallet::MAX_DAILY_Deposit = 1000.0;
+const double Wallet::MAX_DAILY_Withdraw = 500.0;
 
-// User class: interfaces with Wallet securely
+// User class:
 class User {
   private:
       string userID;
-      string name;
-      Wallet wallet;
+      string Name;
+      Wallet wallet; // Composition
   public:
-      User(string id, string username) {
+      User(string id, string userName) {
           userID = id;
-          name = username;
+          Name = userName;
       }
-
-      void deposit(double amount) {
-          cout << "[" << name << "] Attempting to deposit $" << amount << endl;
-          wallet.deposit(amount);
+      void Deposit(double amount) {
+          cout << "[" << Name << "] Attempting to Deposit $" << amount << endl;
+          wallet.Deposit(amount);
       }
-
-      void withdraw(double amount) {
-          cout << "[" << name << "] Attempting to withdraw $" << amount << endl;
-          wallet.withdraw(amount);
+      void Withdraw(double amount) {
+          cout << "[" << Name << "] Attempting to Withdraw $" << amount << endl;
+          wallet.Withdraw(amount);
       }
-
-      void showBalance() const {
-          cout << "[" << name << "] Current Balance: $" << wallet.getBalance() << endl;
+      void ShowBalance() const {
+          cout << "[" << Name << "] Current Balance: $" << wallet.getBalance() << endl;
       }
-
-      void resetLimits() {
-          wallet.resetDailyLimits();
+      void ResetLimits() {
+          wallet.ResetDailyLimits();
       }
 };
 
-// Demonstration
 int main() {
     User user1("U001", "Richard");
     User user2("U002", "Christopher");
 
-    user1.deposit(300);
-    user1.withdraw(100);
-    user1.showBalance();
+    cout << "\n========== Transactions for Richard ==========\n";
+    user1.Deposit(300);
+    user1.Withdraw(100);
+    user1.ShowBalance();
 
-    user1.deposit(1800); 
-    user1.withdraw(1450); 
-    user1.resetLimits(); 
-    user1.withdraw(1450);
+    cout << "\n--- Exceeding Limits Test ---\n";
+    user1.Deposit(1800); 
+    user1.Withdraw(1450); 
+    user1.ResetLimits(); 
+    user1.Withdraw(1450);
 
+    cout << "\n========== Transactions for Christopher ==========\n";
     cout << endl;
 
-    user2.deposit(2000);
-    user2.withdraw(500);
-    user2.showBalance();
-
+    user2.Deposit(2000);
+    user2.Withdraw(500);
+    user2.ShowBalance();
+    cout << "\n==============================================\n";
     return 0;
 }
