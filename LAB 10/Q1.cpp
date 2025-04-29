@@ -1,123 +1,58 @@
 #include <iostream>
-#include <vector>
+#include <fstream>
 #include <string>
 
 using namespace std;
 
-// Abstract Class
-class IFlight {
-    public:
-        virtual bool BookSeat(int) = 0;
-        virtual bool CancelSeat(int passengerID) = 0;
-        virtual bool UpgradeSeat(int passengerID) = 0;
-};
+// Function to encrypt the input string
+string encrypt(const string& input) {
+    string encrypted = input;
+    for (size_t i = 0; i < input.length(); ++i) {
+        encrypted[i] = input[i] + (i + 1);
+    }
+    return encrypted;
+}
 
-
-class Flight : public IFlight{
-    private:
-        string flightNumber;
-        string departure;
-        string arrival;
-        int capacity;
-        int bookedSeats;
-        vector<int> passengerIDs; // stores IDs of booked passengers
-    public:
-        Flight(string fn, string dep, string arr, int cap) : flightNumber(fn), departure(dep), arrival(arr), capacity(cap), bookedSeats(0) {
-            // Paramatrized Constructor
-        }
-
-        bool BookSeat(int passengerID) override {
-            if (bookedSeats >= capacity) {
-                cout << "[Booking Failed] Flight " << flightNumber << " is fully booked." << endl;
-                return false;
-            }
-            // Check if passenger is already booked on the flight
-            for (int ID : passengerIDs) {
-                if (ID == passengerID) {
-                    cout << "[Booking Failed] Passenger already booked this flight.\n";
-                    return false;
-                }
-            }
-            passengerIDs.push_back(passengerID);
-            bookedSeats++;
-            cout << "[Booking Success] Passenger " << passengerID << " booked on flight " << flightNumber << "." << endl;
-            return true;
-        }
-
-        bool CancelSeat(int passengerID) override {
-            for (size_t i = 0; i < passengerIDs.size(); ++i) {
-                if (passengerIDs[i] == passengerID) {
-                    passengerIDs.erase(passengerIDs.begin() + i);
-                    bookedSeats--;
-                    cout << "[Cancellation Success] Passenger " << passengerID << " removed from flight " << flightNumber << ".\n";
-                    return true;
-                }
-            }
-            cout << "[Cancellation Failed] Passenger " << passengerID << " not found on flight " << flightNumber << ".\n";
-            return false;
-        }
-
-        bool UpgradeSeat(int passengerID) override {
-            for (int ID : passengerIDs) {
-                if (ID == passengerID) {
-                    cout << "[Upgrade Success] Passenger " << passengerID << " upgraded on flight " << flightNumber << "." << endl;
-                    return true;
-                }
-            }
-            cout << "[Upgrade Failed] Passenger not booked." << endl;
-            return false;
-        }
-
-        void displayFlightDetails() const {
-            cout << "Flight: " << flightNumber << " | From: " << departure
-                << " | To: " << arrival << " | Capacity: " << capacity
-                << " | Booked Seats: " << bookedSeats << "\n";
-        }
-};
-
-class Passenger {
-    private:
-        int ID;
-        string name;
-    public:
-        Passenger(int pID, string pname) : ID(pID), name(pname) {
-            // Paramatrized Constrcutor
-        }
-
-        bool requestBooking(Flight &flight) { return flight.BookSeat(ID); }
-        bool requestCancel(Flight &flight) { return flight.CancelSeat(ID); }
-        bool requestUpgrade(Flight &flight) { return flight.UpgradeSeat(ID); }
-
-        void displayInfo() const { cout << "Passenger: " << name << " (ID: " << ID << ")" << endl; }
-};
+// Function to decrypt the encrypted string
+string decrypt(const string& encrypted) {
+    string decrypted = encrypted;
+    for (size_t i = 0; i < encrypted.length(); ++i) {
+        decrypted[i] = encrypted[i] - (i + 1);
+    }
+    return decrypted;
+}
 
 int main() {
-    Flight f1("AI101", "New York", "London", 2);
-    Flight f2("BA202", "Paris", "Tokyo", 1);
+    string input;
+    cout << "Enter String: ";
+    getline(cin, input);
+    string encrypted = encrypt(input);
 
-    Passenger p1(101, "Christopher");
-    Passenger p2(102, "Richard");
-    Passenger p3(103, "Edward");
+    // Write encrypted text to file
+    ofstream outFile("encrypted.txt");
+    if (!outFile) {
+        cerr << "Error creating file!" << endl;
+        return 1;
+    }
+    outFile << encrypted;
+    outFile.close();
 
-    f1.displayFlightDetails();
-    f2.displayFlightDetails();
-    cout << endl;
+    cout << "\nNormal Text:= " << input << endl;
+    cout << "Encrypted text inserted in file: " << encrypted << endl;
 
-    p1.requestBooking(f1);
-    p2.requestBooking(f1);
-    p3.requestBooking(f1); // Should fail (flight full)
+    // Open the encrypted text file for reading
+    ifstream inFile("encrypted.txt");
+    if (!inFile) {
+        cerr << "Error reading file!" << endl;
+        return 1;
+    }
 
-    p2.requestCancel(f1);
-    p3.requestBooking(f1); // Now should succeed
-    p3.requestUpgrade(f1); // Should succeed
+    string fileEncrypted;           // Variable to store in the content of the file
+    getline(inFile, fileEncrypted); // Read the entire line
+    inFile.close();
 
-    cout << "\nFinal Flight States:\n";
-    f1.displayFlightDetails();
-    f2.displayFlightDetails();
-
-    //Uncommenting below lines would cause compiler error.
-    // f1.capacity--;
-    // f1.bookedSeats++;
+    string decrypted = decrypt(fileEncrypted);
+    cout << "Decrypted text Read then decoded from file: " << decrypted << endl;
 
     return 0;
 }
