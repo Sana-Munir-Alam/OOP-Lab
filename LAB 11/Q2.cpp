@@ -1,5 +1,7 @@
 #include <iostream>
-#include <exception>
+#include <vector>
+#include <stdexcept>
+
 using namespace std;
 
 // Custom Exception for Dimension Mismatch
@@ -21,103 +23,70 @@ public:
 template<typename T>
 class Matrix {
 private:
-    int Rows;
-    int Columns;
-    T** MatrixArray;
+    int rows, cols;
+    vector<vector<T>> data;
 
 public:
     // Default Constructor
-    Matrix() : Rows(2), Columns(2) {
-        AllocateAndInitialize();
-    }
+    Matrix() : rows(2), cols(2), data(2, vector<T>(2, T())) {}
 
     // Parameterized Constructor
-    Matrix(int rows, int columns) : Rows(rows), Columns(columns) {
-        if (Rows <= 0 || Columns <= 0) {
+    Matrix(int r, int c) : rows(r), cols(c) {
+        if (rows <= 0 || cols <= 0)
             throw NegativeDimensionException();
-        }
-        AllocateAndInitialize();
-    }
-
-    // Destructor
-    ~Matrix() {
-        for (int i = 0; i < Rows; i++) {
-            delete[] MatrixArray[i];
-        }
-        delete[] MatrixArray;
+        data = vector<vector<T>>(rows, vector<T>(cols, T()));
     }
 
     // Element Setter with Bounds Checking
     void SetElement(int i, int j, T value) {
-        if (i < 0 || i >= Rows || j < 0 || j >= Columns) {
+        if (i < 0 || i >= rows || j < 0 || j >= cols)
             throw out_of_range("Invalid matrix indices.");
-        }
-        MatrixArray[i][j] = value;
+        data[i][j] = value;
     }
 
     // Element Getter with Bounds Checking
     T GetElement(int i, int j) const {
-        if (i < 0 || i >= Rows || j < 0 || j >= Columns) {
+        if (i < 0 || i >= rows || j < 0 || j >= cols)
             throw out_of_range("Invalid matrix indices.");
-        }
-        return MatrixArray[i][j];
+        return data[i][j];
     }
 
-    int GetRows() const { return Rows; }
-    int GetColumns() const { return Columns; }
+    int GetRows() const { return rows; }
+    int GetColumns() const { return cols; }
 
-    // Matrix Addition
-    Matrix AddMatrix(const Matrix& other) const {
-        if (Rows != other.Rows || Columns != other.Columns) {
+    // Operator+ Overloading for Matrix Addition
+    Matrix<T> operator+(const Matrix<T>& other) const {
+        if (rows != other.rows || cols != other.cols)
             throw DimensionMisMatchException();
-        }
 
-        Matrix<T> result(Rows, Columns);
-        for (int i = 0; i < Rows; i++) {
-            for (int j = 0; j < Columns; j++) {
-                result.MatrixArray[i][j] = MatrixArray[i][j] + other.MatrixArray[i][j];
-            }
-        }
+        Matrix<T> result(rows, cols);
+        for (int i = 0; i < rows; ++i)
+            for (int j = 0; j < cols; ++j)
+                result.data[i][j] = data[i][j] + other.data[i][j];
+
         return result;
     }
 
-    // Matrix Multiplication
-    Matrix MultiplyMatrix(const Matrix& other) const {
-        if (Columns != other.Rows) {
+    // Operator* Overloading for Matrix Multiplication
+    Matrix<T> operator*(const Matrix<T>& other) const {
+        if (cols != other.rows)
             throw DimensionMisMatchException();
-        }
 
-        Matrix<T> result(Rows, other.Columns);
-        for (int i = 0; i < Rows; i++) {
-            for (int j = 0; j < other.Columns; j++) {
-                result.MatrixArray[i][j] = T();
-                for (int k = 0; k < Columns; k++) {
-                    result.MatrixArray[i][j] += MatrixArray[i][k] * other.MatrixArray[k][j];
-                }
-            }
-        }
+        Matrix<T> result(rows, other.cols);
+        for (int i = 0; i < rows; ++i)
+            for (int j = 0; j < other.cols; ++j)
+                for (int k = 0; k < cols; ++k)
+                    result.data[i][j] += data[i][k] * other.data[k][j];
+
         return result;
     }
 
     // Print Matrix
     void PrintMatrix() const {
-        for (int i = 0; i < Rows; i++) {
-            for (int j = 0; j < Columns; j++) {
-                cout << MatrixArray[i][j] << " ";
-            }
+        for (const auto& row : data) {
+            for (const auto& val : row)
+                cout << val << " ";
             cout << endl;
-        }
-    }
-
-private:
-    // Allocate and initialize the 2D matrix
-    void AllocateAndInitialize() {
-        MatrixArray = new T*[Rows];
-        for (int i = 0; i < Rows; i++) {
-            MatrixArray[i] = new T[Columns];
-            for (int j = 0; j < Columns; j++) {
-                MatrixArray[i][j] = T(); // Default-initialize (e.g., 0 for int)
-            }
         }
     }
 };
@@ -125,7 +94,6 @@ private:
 // Test the Matrix class
 int main() {
     try {
-        // === Valid Test ===
         Matrix<int> A(2, 2);
         Matrix<int> B(2, 2);
 
@@ -139,65 +107,63 @@ int main() {
         B.SetElement(1, 0, 7);
         B.SetElement(1, 1, 8);
 
-        cout << "Matrix A:" << endl;
+        cout << "Matrix A:\n";
         A.PrintMatrix();
 
-        cout << "\nMatrix B:" << endl;
+        cout << "\nMatrix B:\n";
         B.PrintMatrix();
 
-        Matrix<int> C = A.AddMatrix(B);
-        cout << "\nA + B:" << endl;
+        Matrix<int> C = A + B;
+        cout << "\nA + B:\n";
         C.PrintMatrix();
 
-        Matrix<int> D = A.MultiplyMatrix(B);
-        cout << "\nA * B:" << endl;
+        Matrix<int> D = A * B;
+        cout << "\nA * B:\n";
         D.PrintMatrix();
 
-        // === Error 1: Negative Dimension ===
-        cout << "\nTrying to create matrix with negative dimensions..." << endl;
-        Matrix<int> Invalid(-3, 4); // Will throw NegativeDimensionException
+        // Negative Dimensions
+        cout << "\nTrying to create matrix with negative dimensions...\n";
+        Matrix<int> Invalid(-3, 4); // throws
 
     } catch (const NegativeDimensionException& e) {
         cerr << "Caught NegativeDimensionException: " << e.what() << endl;
     }
 
     try {
-        // === Error 2: Dimension Mismatch in Addition ===
-        cout << "\nTrying to add matrices with mismatched dimensions..." << endl;
-        Matrix<int> E(3, 3);
-        Matrix<int> F(2, 3);
-        Matrix<int> G = E.AddMatrix(F); // Will throw DimensionMisMatchException
+        // Addition dimension mismatch
+        cout << "\nTrying to add mismatched matrices...\n";
+        Matrix<int> E(3, 3), F(2, 3);
+        Matrix<int> G = E + F;
 
     } catch (const DimensionMisMatchException& e) {
         cerr << "Caught DimensionMisMatchException: " << e.what() << endl;
     }
 
     try {
-        // === Error 3: Dimension Mismatch in Multiplication ===
-        cout << "\nTrying to multiply matrices with incompatible sizes..." << endl;
-        Matrix<int> H(2, 3);
-        Matrix<int> I(2, 2);
-        Matrix<int> J = H.MultiplyMatrix(I); // Will throw DimensionMisMatchException
+        // Multiplication dimension mismatch
+        cout << "\nTrying to multiply incompatible matrices...\n";
+        Matrix<int> H(2, 3), I(2, 2);
+        Matrix<int> J = H * I;
 
     } catch (const DimensionMisMatchException& e) {
         cerr << "Caught DimensionMisMatchException: " << e.what() << endl;
     }
 
     try {
-        // === Error 4: Out-of-Bounds Access ===
-        cout << "\nTrying to access out-of-bounds element..." << endl;
+        // Out-of-bounds access
+        cout << "\nTrying to access out-of-bounds element...\n";
         Matrix<int> K(2, 2);
-        int value = K.GetElement(5, 0); // Will throw out_of_range
+        int val = K.GetElement(5, 0);
 
     } catch (const out_of_range& e) {
         cerr << "Caught out_of_range exception: " << e.what() << endl;
     }
 
     try {
-        // === Error 5: Out-of-Bounds Set ===
-        cout << "\nTrying to set out-of-bounds element..." << endl;
+        // Out-of-bounds set
+        cout << "\nTrying to set out-of-bounds element...\n";
         Matrix<int> L(2, 2);
-        L.SetElement(0, 5, 99); // Will throw out_of_range
+        L.SetElement(0, 5, 99);
 
     } catch (const out_of_range& e) {
         cerr << "Caught out_of_range exception: " << e.what() << endl;
