@@ -25,14 +25,13 @@ class TypeSafeContainer {
         T get() const {
             try {
                 return std::any_cast<T>(AnyTypeVariable);
-            }
-            catch (const std::bad_any_cast&) {
+            }catch (const std::bad_any_cast&) {
+                cerr << "Type mismatch in get<T>()." << endl;
                 throw BadTypeException();
             }
         }
 };
 
-// Test the container
 int main() {
     try {
         TypeSafeContainer container;
@@ -41,8 +40,12 @@ int main() {
         int myInt = container.get<int>();
         cout << "Stored int: " << myInt << endl;
 
-        // double myDouble = container.get<double>();  // This will throw a BadTypeException
-        // cout << "Stored double: " << myDouble << endl;
+        container.store<string>("Hi, Good Morning!!");
+        string Sentence = container.get<string>();
+        cout << "Stored string: " << Sentence << endl;
+
+        double myDouble = container.get<double>();  // This will throw a BadTypeException
+        cout << "Stored double: " << myDouble << endl;
 
     }
     catch (const exception& e) {
